@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anjal Contracting | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a3a5f;
+            --secondary: #2c5a8d;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo i {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+        
+        .login-logo h2 {
+            color: var(--primary);
+            margin-top: 15px;
+            font-weight: 700;
+        }
+        
+        .login-btn {
+            background: var(--primary);
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+        }
+        
+        .login-btn:hover {
+            background: var(--secondary);
+        }
+        
+        /* All existing styles from the original file */
+        .top-bar {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .company-name i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-role {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .role-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .role-admin {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .role-manager {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .role-client {
+            background: var(--success);
+            color: white;
+        }
+        
+        .sidebar {
+            background: linear-gradient(to bottom, var(--primary), #152a42);
+            color: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+            width: 250px;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.85);
+            border-radius: 5px;
+            margin: 5px 15px;
+            padding: 12px 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link i {
+            width: 25px;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-right: 12px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-title {
+            color: var(--primary);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            border: none;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+            padding: 18px 25px;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 25px 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--secondary);
+        }
+        
+        .stat-card i {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            opacity: 0.8;
+        }
+        
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 15px 0;
+            color: var(--primary);
+        }
+        
+        .stat-card .label {
+            color: #6c757d;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .equipment-card {
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .diesel-card {
+            border-left: 4px solid var(--success);
+        }
+        
+        .report-card {
+            border-left: 4px solid var(--accent);
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            border: none;
+            padding: 10px 22px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary);
+        }
+        
+        .btn-export {
+            background: var(--success);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-export:hover {
+            background: #219653;
+        }
+        
+        .table thead th {
+            background: #f8fafd;
+            font-weight: 700;
+            color: var(--primary);
+            padding: 15px;
+        }
+        
+        .table tbody td {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        
+        .badge-status {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .badge-active {
+            background: #e6f7ee;
+            color: var(--success);
+        }
+        
+        .badge-inactive {
+            background: #fdeceb;
+            color: var(--accent);
+        }
+        
+        .badge-maintenance {
+            background: #fef5e7;
+            color: var(--warning);
+        }
+        
+        .dashboard-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            height: 320px;
+            margin-top: 20px;
+        }
+        
+        .action-buttons button {
+            margin: 0 3px;
+            transition: all 0.2s;
+        }
+        
+        .action-buttons button:hover {
+            transform: scale(1.1);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .export-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .user-management-card {
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .user-card {
+            background: #f8fafd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .user-card:hover {
+            background: #edf2f9;
+            transform: translateY(-3px);
+        }
+        
+        .user-avatar-md {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: white;
+        }
+        
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        /* Modals */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .edit-modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar .nav-link span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 70px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .export-options {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .dashboard-summary {
+                grid-template-columns: 1fr;
+            }
+            .user-info .user-details {
+                display: none;
+            }
+        }
+        
+        .equipment-icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .equipment-type-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #eaf2ff;
+            color: var(--primary);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .filter-bar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .daily-report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .daily-report-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        /* Hide the main content initially */
+        .main-content-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-hard-hat"></i>
+                <h2>Anjal Contracting</h2>
+            </div>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+                <div class="d-grid">
+                    <button type="button" class="btn login-btn" onclick="login()">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content (hidden initially) -->
+    <div id="mainContent" class="main-content-container">
+        <!-- Top Bar with Company and User Info -->
+        <div class="top-bar">
+            <div class="company-name">
+                <i class="fas fa-hard-hat"></i>
+                <span>Anjal Contracting</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-name" id="loggedInUserName">Altaf Hussain</div>
+                    <div class="user-role">
+                        <span class="role-badge role-admin">Administrator</span>
+                    </div>
+                </div>
+                <div class="user-avatar" id="loggedInUserAvatar">
+                    AH
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-2 col-lg-2 d-md-block sidebar collapse p-0">
+                    <div class="pt-4">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-section="dashboard">
+                                    <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-section="equipment">
+                                    <i class="fas fa-digging"></i> <span>Equipment List</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-section="diesel">
+                                    <i class="fas fa-gas-pump"></i> <span>Diesel Management</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-section="daily-report">
+                                    <i class="fas fa-file-invoice-dollar"></i> <span>Daily Diesel Report</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-section="users">
+                                    <i class="fas fa-users-cog"></i> <span>User Management</span>
+                                </a>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-5 text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-light" onclick="refreshData()">
+                                    <i class="fas fa-sync-alt"></i> <span>Refresh</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-light" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="col-md-10 ms-sm-auto col-lg-10 main-content">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="section active">
+                        <div class="header">
+                            <h2 class="dashboard-title">
+                                <i class="fas fa-tachometer-alt"></i> Equipment & Diesel Dashboard
+                            </h2>
+                            <div class="export-options">
+                                <button class="btn btn-export" onclick="exportEquipment()">
+                                    <i class="fas fa-file-excel me-1"></i> Export Equipment
+                                </button>
+                                <button class="btn btn-export" onclick="exportDiesel()">
+                                    <i class="fas fa-file-csv me-1"></i> Export Diesel Data
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Summary -->
+                        <div class="dashboard-summary">
+                            <div class="card stat-card">
+                                <i class="fas fa-tractor"></i>
+                                <div class="number" id="totalEquipment">23</div>
+                                <div class="label">Total Equipment</div>
+                            </div>
+                            
+                            <div class="card stat-card">
+                                <i class="fas fa-gas-pump"></i>
+                                <div class="number" id="weeklyDiesel">3,150 L</div>
+                                <div class="label">Diesel Used (This Week)</div>
+                            </div>
+                            
+                            <div class="card stat-card">
+                                <i class="fas fa-tools"></i>
+                                <div class="number" id="maintenanceCount">5</div>
+                                <div class="label">Under Maintenance</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <!-- Equipment List Preview -->
+                                <div class="card equipment-card">
+                                    <div class="card-header">
+                                        <span><i class="fas fa-list me-2"></i>Recent Equipment</span>
+                                        <button class="btn btn-sm btn-primary" onclick="showSection('equipment')">
+                                            <i class="fas fa-eye me-1"></i> View All
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Equipment</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>EX-S102</td>
+                                                        <td>Mini Excavator</td>
+                                                        <td><span class="equipment-type-badge">Excavator Small Size</span></td>
+                                                        <td><span class="badge-status badge-active">Active</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>DZ-101</td>
+                                                        <td>Bulldozer</td>
+                                                        <td><span class="equipment-type-badge">Dozzer</span></td>
+                                                        <td><span class="badge-status badge-maintenance">Maintenance</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>DT-212</td>
+                                                        <td>Articulated Dump Truck</td>
+                                                        <td><span class="equipment-type-badge">Dump Truck</span></td>
+                                                        <td><span class="badge-status badge-active">Active</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>TL-001</td>
+                                                        <td>Tower Light</td>
+                                                        <td><span class="equipment-type-badge">TOWER LIGHT</span></td>
+                                                        <td><span class="badge-status badge-active">Active</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diesel Consumption Chart -->
+                                <div class="card report-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-2"></i>Diesel Consumption Report (Last 30 Days)
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="dieselChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4">
+                                <!-- Diesel Entry Form -->
+                                <div class="card diesel-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-gas-pump me-2"></i>Record Diesel Usage
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="dieselForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Select Equipment</label>
+                                                <select class="form-select" id="equipmentSelect">
+                                                    <!-- Options will be added dynamically -->
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Date & Time</label>
+                                                <input type="datetime-local" class="form-control" id="dieselDateTime">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Diesel (Liters)</label>
+                                                <input type="number" class="form-control" id="dieselLiters" placeholder="Enter liters" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Operator</label>
+                                                <input type="text" class="form-control" id="dieselOperator" placeholder="Operator name" required>
+                                            </div>
+                                            
+                                            <div class="d-grid">
+                                                <button type="button" class="btn btn-primary" onclick="saveDieselRecord()">
+                                                    <i class="fas fa-save me-1"></i> Save Record
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recent Diesel Records -->
+                                <div class="card report-card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-history me-2"></i>Recent Diesel Entries</span>
+                                        <div class="position-relative">
+                                            <i class="fas fa-bell fs-5"></i>
+                                            <span id="dieselNotificationBadge" class="notification-badge">4</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group">
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Excavator Small Size EX-S102</h6>
+                                                    <small>Today, 08:45 AM</small>
+                                                </div>
+                                                <p class="mb-1">85 liters</p>
+                                                <small>Operator: Altaf Hussain</small>
+                                            </a>
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Dump Truck DT-212</h6>
+                                                    <small>Yesterday, 05:30 PM</small>
+                                                </div>
+                                                <p class="mb-1">120 liters</p>
+                                                <small>Operator: Ahmed Khan</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Equipment List Section -->
+                    <div id="equipment" class="section">
+                        <div class="header">
+                            <h2 class="dashboard-title">
+                                <i class="fas fa-list me-2"></i>Equipment Management
+                            </h2>
+                            <div>
+                                <button class="btn btn-primary" onclick="openAddEquipmentModal()">
+                                    <i class="fas fa-plus me-1"></i> Add Equipment
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-bar">
+                            <div>
+                                <label class="form-label">Filter by Type:</label>
+                                <select class="form-select" id="equipmentTypeFilter" onchange="filterEquipmentTable()">
+                                    <option value="all">All Types</option>
+                                    <option value="Excavator Small Size">Excavator Small Size</option>
+                                    <option value="Excavator (BIG SIZE)">Excavator (BIG SIZE)</option>
+                                    <option value="Dozzer">Dozzer</option>
+                                    <option value="Grader">Grader</option>
+                                    <option value="Roller">Roller</option>
+                                    <option value="Wheal Loader">Wheal Loader</option>
+                                    <option value="Dump Truck">Dump Truck</option>
+                                    <option value="Desel DIANA">Desel DIANA</option>
+                                    <option value="Desel Tanker">Desel Tanker</option>
+                                    <option value="Water Tanker">Water Tanker</option>
+                                    <option value="BUS">BUS</option>
+                                    <option value="Maintenance Car">Maintenance Car</option>
+                                    <option value="Engineers Car">Engineers Car</option>
+                                    <option value="Site Car">Site Car</option>
+                                    <option value="TOWER LIGHT">TOWER LIGHT</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Search Equipment:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="equipmentSearch" placeholder="Search...">
+                                    <button class="btn btn-outline-secondary" onclick="filterEquipmentTable()">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card equipment-card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Equipment</th>
+                                                <th>Type</th>
+                                                <th>Model</th>
+                                                <th>Plate No.</th>
+                                                <th>Chassis No.</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="equipmentTableBody">
+                                            <!-- Equipment rows will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Daily Diesel Report Section -->
+                    <div id="daily-report" class="section">
+                        <div class="header">
+                            <h2 class="dashboard-title">
+                                <i class="fas fa-file-invoice-dollar me-2"></i>Daily Diesel Report
+                            </h2>
+                            <div>
+                                <button class="btn btn-export" onclick="exportDailyReport()">
+                                    <i class="fas fa-file-pdf me-1"></i> Export Report
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-bar">
+                            <div>
+                                <label class="form-label">Select Date:</label>
+                                <input type="date" class="form-control" id="reportDate" value="2023-10-05">
+                            </div>
+                            <div>
+                                <label class="form-label">Filter by Equipment:</label>
+                                <select class="form-select" id="reportEquipmentFilter">
+                                    <option value="all">All Equipment</option>
+                                    <!-- Options will be added dynamically -->
+                                </select>
+                            </div>
+                            <div class="d-flex align-items-end">
+                                <button class="btn btn-primary" onclick="loadDailyReport()">
+                                    <i class="fas fa-filter me-1"></i> Apply Filters
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card report-card">
+                            <div class="card-header">
+                                <i class="fas fa-gas-pump me-2"></i>Diesel Consumption for <span id="reportDateLabel">October 5, 2023</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="daily-report-grid">
+                                    <div class="daily-report-card">
+                                        <h5><i class="fas fa-tractor me-2"></i>Excavator Small Size EX-S102</h5>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <div>
+                                                <h6>Diesel Usage</h6>
+                                                <p class="mb-0">85 liters</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h6>Operator</h6>
+                                            <p class="mb-0">Altaf Hussain</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="daily-report-card">
+                                        <h5><i class="fas fa-truck-moving me-2"></i>Dump Truck DT-212</h5>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <div>
+                                                <h6>Diesel Usage</h6>
+                                                <p class="mb-0">120 liters</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h6>Operator</h6>
+                                            <p class="mb-0">Ahmed Khan</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="daily-report-card">
+                                        <h5><i class="fas fa-truck me-2"></i>Desel Tanker DT-002</h5>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <div>
+                                                <h6>Diesel Usage</h6>
+                                                <p class="mb-0">150 liters</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h6>Operator</h6>
+                                            <p class="mb-0">Usman Siddiqui</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="daily-report-card">
+                                        <h5><i class="fas fa-tools me-2"></i>Maintenance Car MC-101</h5>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <div>
+                                                <h6>Diesel Usage</h6>
+                                                <p class="mb-0">45 liters</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h6>Operator</h6>
+                                            <p class="mb-0">Bilal Ahmed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4>Summary</h4>
+                                        <h3 class="text-primary">400 liters</h3>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 35%">Excavator: 35%</div>
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 30%">Truck: 30%</div>
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%">Tanker: 25%</div>
+                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 10%">Car: 10%</div>
+                                    </div>
+                                    
+                                    <div class="row mt-4">
+                                        <div class="col-md-6">
+                                            <h5><i class="fas fa-list-ol me-2"></i>Equipment Summary</h5>
+                                            <ul class="list-group">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Excavators
+                                                    <span class="badge bg-primary rounded-pill">2</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Trucks
+                                                    <span class="badge bg-primary rounded-pill">1</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Tankers
+                                                    <span class="badge bg-primary rounded-pill">1</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Cars
+                                                    <span class="badge bg-primary rounded-pill">1</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5><i class="fas fa-money-bill-wave me-2"></i>Usage Summary</h5>
+                                            <ul class="list-group">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Total Diesel
+                                                    <span>400 liters</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="footer">
+                        <p>Logistics Equipment & Diesel Management System &copy; 2023. All rights reserved.</p>
+                        <p class="mb-0">Developed for Anjal Contracting | Administrator: Altaf Hussain</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Equipment Modal -->
+        <div id="addEquipmentModal" class="edit-modal">
+            <div class="edit-modal-content">
+                <div class="modal-header">
+                    <h5>Add New Equipment</h5>
+                    <button class="modal-close" onclick="closeAddEquipmentModal()">&times;</button>
+                </div>
+                <form id="addEquipmentForm">
+                    <div class="mb-3">
+                        <label class="form-label">Equipment ID</label>
+                        <input type="text" class="form-control" id="newEquipmentId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Equipment Name</label>
+                        <input type="text" class="form-control" id="newEquipmentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="newEquipmentType" required>
+                            <option value="Excavator Small Size">Excavator Small Size</option>
+                            <option value="Excavator (BIG SIZE)">Excavator (BIG SIZE)</option>
+                            <option value="Dozzer">Dozzer</option>
+                            <option value="Grader">Grader</option>
+                            <option value="Roller">Roller</option>
+                            <option value="Wheal Loader">Wheal Loader</option>
+                            <option value="Dump Truck">Dump Truck</option>
+                            <option value="Desel DIANA">Desel DIANA</option>
+                            <option value="Desel Tanker">Desel Tanker</option>
+                            <option value="Water Tanker">Water Tanker</option>
+                            <option value="BUS">BUS</option>
+                            <option value="Maintenance Car">Maintenance Car</option>
+                            <option value="Engineers Car">Engineers Car</option>
+                            <option value="Site Car">Site Car</option>
+                            <option value="TOWER LIGHT">TOWER LIGHT</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-control" id="newEquipmentModel" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Plate Number</label>
+                        <input type="text" class="form-control" id="newEquipmentPlateNo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chassis Number</label>
+                        <input type="text" class="form-control" id="newEquipmentChassisNo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" id="newEquipmentLocation" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Capacity</label>
+                        <input type="text" class="form-control" id="newEquipmentCapacity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="newEquipmentStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-secondary me-2" onclick="closeAddEquipmentModal()">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="addNewEquipment()">Add Equipment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Equipment Modal -->
+        <div id="editEquipmentModal" class="edit-modal">
+            <div class="edit-modal-content">
+                <div class="modal-header">
+                    <h5>Edit Equipment</h5>
+                    <button class="modal-close" onclick="closeEditEquipmentModal()">&times;</button>
+                </div>
+                <form id="editEquipmentForm">
+                    <input type="hidden" id="editEquipmentIndex">
+                    <div class="mb-3">
+                        <label class="form-label">Equipment ID</label>
+                        <input type="text" class="form-control" id="editEquipmentId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Equipment Name</label>
+                        <input type="text" class="form-control" id="editEquipmentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="editEquipmentType" required>
+                            <option value="Excavator Small Size">Excavator Small Size</option>
+                            <option value="Excavator (BIG SIZE)">Excavator (BIG SIZE)</option>
+                            <option value="Dozzer">Dozzer</option>
+                            <option value="Grader">Grader</option>
+                            <option value="Roller">Roller</option>
+                            <option value="Wheal Loader">Wheal Loader</option>
+                            <option value="Dump Truck">Dump Truck</option>
+                            <option value="Desel DIANA">Desel DIANA</option>
+                            <option value="Desel Tanker">Desel Tanker</option>
+                            <option value="Water Tanker">Water Tanker</option>
+                            <option value="BUS">BUS</option>
+                            <option value="Maintenance Car">Maintenance Car</option>
+                            <option value="Engineers Car">Engineers Car</option>
+                            <option value="Site Car">Site Car</option>
+                            <option value="TOWER LIGHT">TOWER LIGHT</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-control" id="editEquipmentModel" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Plate Number</label>
+                        <input type="text" class="form-control" id="editEquipmentPlateNo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chassis Number</label>
+                        <input type="text" class="form-control" id="editEquipmentChassisNo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" id="editEquipmentLocation" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Capacity</label>
+                        <input type="text" class="form-control" id="editEquipmentCapacity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="editEquipmentStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-secondary me-2" onclick="closeEditEquipmentModal()">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="saveEditedEquipment()">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User credentials
+        const validUsers = [
+            { username: "admin", password: "admin123", name: "Altaf Hussain", role: "Administrator" },
+            { username: "manager", password: "manager123", name: "Ahmed Khan", role: "Manager" },
+            { username: "operator", password: "operator123", name: "Bilal Ahmed", role: "Operator" }
+        ];
+
+        // Current user
+        let currentUser = null;
+
+        // Sample data with all equipment types
+        let equipmentData = [
+            { id: "EX-S102", name: "Mini Excavator", type: "Excavator Small Size", model: "CAT 302.5", plateNo: "KHI-ABC-123", chassisNo: "CAT3025XYZ123456", location: "Site A", capacity: "2.5 tons", status: "Active" },
+            { id: "EX-B205", name: "Large Excavator", type: "Excavator (BIG SIZE)", model: "Komatsu PC700", plateNo: "KHI-DEF-456", chassisNo: "KOM700XYZ789012", location: "Site B", capacity: "70 tons", status: "Active" },
+            { id: "DZ-101", name: "Bulldozer", type: "Dozzer", model: "CAT D6", plateNo: "KHI-GHI-789", chassisNo: "CATD6XYZ345678", location: "Site C", capacity: "15,000 kg", status: "Active" },
+            { id: "GR-305", name: "Motor Grader", type: "Grader", model: "Volvo G950", plateNo: "KHI-JKL-012", chassisNo: "VOL950XYZ901234", location: "Site A", capacity: "25,000 kg", status: "Maintenance" },
+            { id: "RL-401", name: "Double Drum Roller", type: "Roller", model: "Bomag BW 226", plateNo: "KHI-MNO-345", chassisNo: "BOM226XYZ567890", location: "Site B", capacity: "12,000 kg", status: "Active" },
+            { id: "WL-501", name: "Wheel Loader", type: "Wheal Loader", model: "CAT 950", plateNo: "KHI-PQR-678", chassisNo: "CAT950XYZ123456", location: "Site C", capacity: "5.0 m³", status: "Active" },
+            { id: "DT-212", name: "Articulated Dump Truck", type: "Dump Truck", model: "Volvo A40G", plateNo: "KHI-STU-901", chassisNo: "VOL40GXYZ789012", location: "Site A", capacity: "40 tons", status: "Active" },
+            { id: "DD-001", name: "Diesel Diana", type: "Desel DIANA", model: "Hino 700", plateNo: "KHI-VWX-234", chassisNo: "HIN700XYZ345678", location: "Site B", capacity: "10,000 L", status: "Active" },
+            { id: "DT-002", name: "Diesel Tanker", type: "Desel Tanker", model: "Isuzu FVR", plateNo: "KHI-YZA-567", chassisNo: "ISUZRFVR901234", location: "Site C", capacity: "15,000 L", status: "Active" },
+            { id: "WT-003", name: "Water Tanker", type: "Water Tanker", model: "Tata LPT", plateNo: "KHI-BCD-890", chassisNo: "TATALPT567890", location: "Site A", capacity: "12,000 L", status: "Active" },
+            { id: "BUS-01", name: "Staff Bus", type: "BUS", model: "Toyota Coaster", plateNo: "KHI-EFG-123", chassisNo: "TOYCOAST123456", location: "Site B", capacity: "30 seats", status: "Active" },
+            { id: "MC-101", name: "Maintenance Van", type: "Maintenance Car", model: "Toyota Hilux", plateNo: "KHI-HIJ-456", chassisNo: "TOYHILUX789012", location: "Site C", capacity: "5 persons", status: "Active" },
+            { id: "EC-201", name: "Engineers Vehicle", type: "Engineers Car", model: "Toyota Land Cruiser", plateNo: "KHI-KLM-789", chassisNo: "TOYLAND345678", location: "Site A", capacity: "7 persons", status: "Active" },
+            { id: "SC-301", name: "Site Supervisor Car", type: "Site Car", model: "Toyota Corolla", plateNo: "KHI-NOP-012", chassisNo: "TOYCORO901234", location: "Site B", capacity: "5 persons", status: "Active" },
+            { id: "TL-001", name: "Tower Light", type: "TOWER LIGHT", model: "Generac 6kW", plateNo: "N/A", chassisNo: "GEN6KW567890", location: "Site C", capacity: "6,000W", status: "Active" }
+        ];
+
+        let dieselRecords = [
+            { equipment: "Excavator Small Size EX-S102", datetime: "2023-10-05T10:30", liters: 85, operator: "Altaf Hussain" },
+            { equipment: "Dump Truck DT-212", datetime: "2023-10-05T14:15", liters: 120, operator: "Ahmed Khan" },
+            { equipment: "Desel Tanker DT-002", datetime: "2023-10-05T09:45", liters: 150, operator: "Usman Siddiqui" },
+            { equipment: "Maintenance Car MC-101", datetime: "2023-10-05T16:30", liters: 45, operator: "Bilal Ahmed" }
+        ];
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validate credentials
+            const user = validUsers.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                
+                // Hide login form and show main content
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                // Update user info in the top bar
+                document.getElementById('loggedInUserName').textContent = user.name;
+                document.getElementById('loggedInUserAvatar').textContent = 
+                    user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                // Set operator name in diesel form
+                document.getElementById('dieselOperator').value = user.name;
+                
+                // Initialize the application
+                initializeApp();
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+        
+        // Initialize the application after login
+        function initializeApp() {
+            // Initialize Charts
+            initCharts();
+            
+            // Load equipment data
+            renderEquipmentTable();
+            
+            // Populate equipment dropdown
+            populateEquipmentDropdown();
+            
+            // Set current date for diesel entry
+            const now = new Date();
+            document.getElementById('dieselDateTime').value = now.toISOString().slice(0, 16);
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Update dashboard stats
+            updateDashboardStats();
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            // Total equipment count
+            document.getElementById('totalEquipment').textContent = equipmentData.length;
+            
+            // Maintenance count
+            const maintenanceCount = equipmentData.filter(e => e.status === 'Maintenance').length;
+            document.getElementById('maintenanceCount').textContent = maintenanceCount;
+            
+            // Weekly diesel usage (sum of last 7 days)
+            const weeklyDiesel = dieselRecords.reduce((sum, record) => sum + record.liters, 0);
+            document.getElementById('weeklyDiesel').textContent = weeklyDiesel.toLocaleString() + ' L';
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const ctx = document.getElementById('dieselChart').getContext('2d');
+            const dieselChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sep 5', 'Sep 10', 'Sep 15', 'Sep 20', 'Sep 25', 'Sep 30', 'Oct 5'],
+                    datasets: [{
+                        label: 'Diesel Consumption (Liters)',
+                        data: [350, 310, 380, 320, 340, 390, 420],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Liters'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Daily Diesel Consumption',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render equipment table
+        function renderEquipmentTable() {
+            const tbody = document.getElementById('equipmentTableBody');
+            tbody.innerHTML = '';
+            
+            equipmentData.forEach((equipment, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${equipment.id}</td>
+                    <td>${equipment.name}</td>
+                    <td><span class="equipment-type-badge">${equipment.type}</span></td>
+                    <td>${equipment.model}</td>
+                    <td>${equipment.plateNo}</td>
+                    <td>${equipment.chassisNo}</td>
+                    <td>${equipment.location}</td>
+                    <td>
+                        <span class="badge-status ${equipment.status === 'Active' ? 'badge-active' : 
+                              equipment.status === 'Maintenance' ? 'badge-maintenance' : 'badge-inactive'}">
+                            ${equipment.status}
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <button class="btn btn-sm btn-outline-warning" onclick="editEquipment(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteEquipment(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Populate equipment dropdown
+        function populateEquipmentDropdown() {
+            const select = document.getElementById('equipmentSelect');
+            select.innerHTML = '';
+            
+            equipmentData.forEach(equipment => {
+                const option = document.createElement('option');
+                option.value = `${equipment.type} ${equipment.id} (${equipment.model})`;
+                option.textContent = `${equipment.type} ${equipment.id} (${equipment.model})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Filter equipment table
+        function filterEquipmentTable() {
+            const typeFilter = document.getElementById('equipmentTypeFilter').value;
+            const searchTerm = document.getElementById('equipmentSearch').value.toLowerCase();
+            const tbody = document.getElementById('equipmentTableBody');
+            tbody.innerHTML = '';
+            
+            equipmentData.forEach((equipment, index) => {
+                if ((typeFilter === 'all' || equipment.type === typeFilter) &&
+                    (equipment.id.toLowerCase().includes(searchTerm) || 
+                     equipment.name.toLowerCase().includes(searchTerm) || 
+                     equipment.type.toLowerCase().includes(searchTerm) ||
+                     equipment.model.toLowerCase().includes(searchTerm) ||
+                     equipment.plateNo.toLowerCase().includes(searchTerm) ||
+                     equipment.chassisNo.toLowerCase().includes(searchTerm) ||
+                     equipment.location.toLowerCase().includes(searchTerm))) {
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${equipment.id}</td>
+                        <td>${equipment.name}</td>
+                        <td><span class="equipment-type-badge">${equipment.type}</span></td>
+                        <td>${equipment.model}</td>
+                        <td>${equipment.plateNo}</td>
+                        <td>${equipment.chassisNo}</td>
+                        <td>${equipment.location}</td>
+                        <td>
+                            <span class="badge-status ${equipment.status === 'Active' ? 'badge-active' : 
+                                  equipment.status === 'Maintenance' ? 'badge-maintenance' : 'badge-inactive'}">
+                                ${equipment.status}
+                            </span>
+                        </td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-outline-warning" onclick="editEquipment(${index})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteEquipment(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+        }
+
+        // Save diesel record
+        function saveDieselRecord() {
+            const equipment = document.getElementById('equipmentSelect').value;
+            const datetime = document.getElementById('dieselDateTime').value;
+            const liters = parseInt(document.getElementById('dieselLiters').value);
+            const operator = document.getElementById('dieselOperator').value;
+            
+            if (!equipment || !datetime || !liters || !operator) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Add to records
+            dieselRecords.unshift({
+                equipment,
+                datetime,
+                liters,
+                operator
+            });
+            
+            // Reset form
+            document.getElementById('dieselForm').reset();
+            
+            // Set current date
+            const now = new Date();
+            document.getElementById('dieselDateTime').value = now.toISOString().slice(0, 16);
+            
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Show success message
+            alert('Diesel record saved successfully!');
+        }
+
+        // Open add equipment modal
+        function openAddEquipmentModal() {
+            document.getElementById('addEquipmentModal').style.display = 'flex';
+        }
+
+        // Close add equipment modal
+        function closeAddEquipmentModal() {
+            document.getElementById('addEquipmentModal').style.display = 'none';
+        }
+
+        // Add new equipment
+        function addNewEquipment() {
+            const id = document.getElementById('newEquipmentId').value;
+            const name = document.getElementById('newEquipmentName').value;
+            const type = document.getElementById('newEquipmentType').value;
+            const model = document.getElementById('newEquipmentModel').value;
+            const plateNo = document.getElementById('newEquipmentPlateNo').value;
+            const chassisNo = document.getElementById('newEquipmentChassisNo').value;
+            const location = document.getElementById('newEquipmentLocation').value;
+            const capacity = document.getElementById('newEquipmentCapacity').value;
+            const status = document.getElementById('newEquipmentStatus').value;
+            
+            if (!id || !name || !type || !model || !plateNo || !chassisNo || !location || !capacity || !status) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Add to equipment data
+            equipmentData.push({
+                id,
+                name,
+                type,
+                model,
+                plateNo,
+                chassisNo,
+                location,
+                capacity,
+                status
+            });
+            
+            // Render updated table
+            renderEquipmentTable();
+            
+            // Populate equipment dropdown
+            populateEquipmentDropdown();
+            
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Close modal
+            closeAddEquipmentModal();
+            
+            // Show success message
+            alert('Equipment added successfully!');
+        }
+
+        // Open edit equipment modal
+        function editEquipment(index) {
+            const equipment = equipmentData[index];
+            
+            // Fill the form with equipment data
+            document.getElementById('editEquipmentIndex').value = index;
+            document.getElementById('editEquipmentId').value = equipment.id;
+            document.getElementById('editEquipmentName').value = equipment.name;
+            document.getElementById('editEquipmentType').value = equipment.type;
+            document.getElementById('editEquipmentModel').value = equipment.model;
+            document.getElementById('editEquipmentPlateNo').value = equipment.plateNo;
+            document.getElementById('editEquipmentChassisNo').value = equipment.chassisNo;
+            document.getElementById('editEquipmentLocation').value = equipment.location;
+            document.getElementById('editEquipmentCapacity').value = equipment.capacity;
+            document.getElementById('editEquipmentStatus').value = equipment.status;
+            
+            // Show the modal
+            document.getElementById('editEquipmentModal').style.display = 'flex';
+        }
+
+        // Close edit equipment modal
+        function closeEditEquipmentModal() {
+            document.getElementById('editEquipmentModal').style.display = 'none';
+        }
+
+        // Save edited equipment
+        function saveEditedEquipment() {
+            const index = document.getElementById('editEquipmentIndex').value;
+            const id = document.getElementById('editEquipmentId').value;
+            const name = document.getElementById('editEquipmentName').value;
+            const type = document.getElementById('editEquipmentType').value;
+            const model = document.getElementById('editEquipmentModel').value;
+            const plateNo = document.getElementById('editEquipmentPlateNo').value;
+            const chassisNo = document.getElementById('editEquipmentChassisNo').value;
+            const location = document.getElementById('editEquipmentLocation').value;
+            const capacity = document.getElementById('editEquipmentCapacity').value;
+            const status = document.getElementById('editEquipmentStatus').value;
+            
+            if (!id || !name || !type || !model || !plateNo || !chassisNo || !location || !capacity || !status) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Update equipment data
+            equipmentData[index] = {
+                id,
+                name,
+                type,
+                model,
+                plateNo,
+                chassisNo,
+                location,
+                capacity,
+                status
+            };
+            
+            // Render updated table
+            renderEquipmentTable();
+            
+            // Populate equipment dropdown
+            populateEquipmentDropdown();
+            
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Close modal
+            closeEditEquipmentModal();
+            
+            // Show success message
+            alert('Equipment updated successfully!');
+        }
+
+        // Delete equipment
+        function deleteEquipment(index) {
+            if (confirm('Are you sure you want to delete this equipment?')) {
+                equipmentData.splice(index, 1);
+                renderEquipmentTable();
+                populateEquipmentDropdown();
+                updateDashboardStats();
+                alert('Equipment deleted successfully!');
+            }
+        }
+
+        // Export Equipment Data to Excel
+        function exportEquipment() {
+            // Prepare data for export
+            const exportData = equipmentData.map(equipment => ({
+                'Equipment ID': equipment.id,
+                'Equipment Name': equipment.name,
+                'Type': equipment.type,
+                'Model': equipment.model,
+                'Plate Number': equipment.plateNo,
+                'Chassis Number': equipment.chassisNo,
+                'Location': equipment.location,
+                'Capacity': equipment.capacity,
+                'Status': equipment.status
+            }));
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Equipment");
+            
+            // Export to file
+            XLSX.writeFile(wb, "Anjal_Equipment_Data.xlsx");
+        }
+        
+        // Export Diesel Data to CSV
+        function exportDiesel() {
+            // Prepare data for export
+            const exportData = dieselRecords.map(record => ({
+                'Equipment': record.equipment,
+                'Date': new Date(record.datetime).toLocaleDateString(),
+                'Time': new Date(record.datetime).toLocaleTimeString(),
+                'Liters': record.liters,
+                'Operator': record.operator
+            }));
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "DieselRecords");
+            
+            // Export to file
+            XLSX.writeFile(wb, "Anjal_Diesel_Records.csv");
+        }
+        
+        // Export Daily Report to PDF (simulated)
+        function exportDailyReport() {
+            // In a real implementation, this would generate a PDF
+            // For this example, we'll create an Excel file with the report data
+            
+            const date = document.getElementById('reportDate').value;
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Prepare data for export
+            const exportData = [
+                { 'Report Type': 'Daily Diesel Report', 'Date': formattedDate, 'Total Liters': '400' },
+                {}, // Empty row for spacing
+                { 'Equipment': 'Excavator Small Size EX-S102', 'Liters': '85', 'Operator': 'Altaf Hussain' },
+                { 'Equipment': 'Dump Truck DT-212', 'Liters': '120', 'Operator': 'Ahmed Khan' },
+                { 'Equipment': 'Desel Tanker DT-002', 'Liters': '150', 'Operator': 'Usman Siddiqui' },
+                { 'Equipment': 'Maintenance Car MC-101', 'Liters': '45', 'Operator': 'Bilal Ahmed' }
+            ];
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "DailyReport");
+            
+            // Export to file
+            XLSX.writeFile(wb, `Anjal_Daily_Report_${date}.xlsx`);
+        }
+        
+        // Refresh data
+        function refreshData() {
+            renderEquipmentTable();
+            populateEquipmentDropdown();
+            updateDashboardStats();
+            alert("Data refreshed successfully!");
+        }
+        
+        // Setup navigation
+        function setupNavigation() {
+            // Add click event to sidebar links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show the selected section
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+        }
+        
+        // Show selected section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+        }
+        
+        // Load daily report
+        function loadDailyReport() {
+            const date = document.getElementById('reportDate').value;
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('reportDateLabel').textContent = formattedDate;
+            alert(`Daily report loaded for ${formattedDate}`);
+        }
+    </script>
+</body>
+</html>
